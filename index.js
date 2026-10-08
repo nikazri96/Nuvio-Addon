@@ -5,21 +5,30 @@ const manifest = require("./manifest.json");
 const app = express();
 app.use(cors());
 
-// Route untuk manifest
+// Route untuk manifest Nuvio
 app.get("/manifest.json", (req, res) => {
   res.json(manifest);
 });
 
-// Route untuk stream movie
+// Route untuk stream movie & series
 app.get("/stream/:type/:id.json", (req, res) => {
-  const { id } = req.params;
+  let { id } = req.params;
 
+  // Buang sambungan .json jika ada pada ID IMDB (Contoh: tt0816692.json -> tt0816692)
+  const cleanId = id.replace(".json", "");
+
+  // Hantar senarai stream video ke Nuvio
   res.json({
     streams: [
       {
         name: "PencariMovie",
-        title: "VidSrc Stream Server (HD)",
-        url: `https://vidsrc.to/embed/movie/${id}`
+        title: "VidSrc Stream Server 1 (HD)",
+        url: `https://vidsrc.to/embed/movie/${cleanId}`
+      },
+      {
+        name: "PencariMovie",
+        title: "VidSrc Stream Server 2 (Fast)",
+        url: `https://vidsrc.me/embed/movie?imdb=${cleanId}`
       }
     ]
   });
@@ -27,5 +36,6 @@ app.get("/stream/:type/:id.json", (req, res) => {
 
 const PORT = process.env.PORT || 7000;
 app.listen(PORT, () => {
-  console.log(`Server aktif di port ${PORT}`);
+  console.log(`Server PencariMovie berjalan di port ${PORT}`);
 });
+
