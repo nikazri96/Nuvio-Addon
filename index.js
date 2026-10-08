@@ -14,20 +14,35 @@ app.get("/manifest.json", (req, res) => {
 app.get("/stream/:type/:id.json", (req, res) => {
   let { id } = req.params;
 
-  // Buang sambungan .json jika ada pada ID IMDB (Contoh: tt0816692.json -> tt0816692)
+  // Buang sambungan .json jika ada pada ID IMDB
   const cleanId = id.replace(".json", "");
 
-  // Hantar senarai stream video ke Nuvio
+  // Menghantar pelbagai pilihan server alternatif yang pantas
   res.json({
     streams: [
       {
         name: "PencariMovie",
-        title: "VidSrc Stream Server 1 (HD)",
+        title: "⚡ AutoEmbed (Pantas)",
+        url: `https://player.autoembed.cc/embed/movie/${cleanId}`
+      },
+      {
+        name: "PencariMovie",
+        title: "⚡ SmashyStream (Laju)",
+        url: `https://embed.smashystream.com/playere.php?imdb=${cleanId}`
+      },
+      {
+        name: "PencariMovie",
+        title: "⚡ 2Embed (Stabil)",
+        url: `https://www.2embed.cc/embed/${cleanId}`
+      },
+      {
+        name: "PencariMovie",
+        title: "🐢 VidSrc Server 1",
         url: `https://vidsrc.to/embed/movie/${cleanId}`
       },
       {
         name: "PencariMovie",
-        title: "VidSrc Stream Server 2 (Fast)",
+        title: "🐢 VidSrc Server 2",
         url: `https://vidsrc.me/embed/movie?imdb=${cleanId}`
       }
     ]
@@ -38,4 +53,5 @@ const PORT = process.env.PORT || 7000;
 app.listen(PORT, () => {
   console.log(`Server PencariMovie berjalan di port ${PORT}`);
 });
+
 
